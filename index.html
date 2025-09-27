@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>متجر المنتجات</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>متجري الإلكتروني</h1>
+        <nav>
+          <a href="#" id="home-link">الرئيسية</a>
+          <a href="#" id="my-products-link" class="hidden">منتجاتي</a>
+          <a href="#" id="auth-link">تسجيل بائع جديد</a>
+          <a href="#" id="admin-link">مسؤول</a>
+          <div class="cart-icon-container">
+            <span class="cart-count">0</span>
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png"
+              alt="سلة المشتريات"
+              class="cart-icon"
+            />
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div id="top-metrics-bar">
+      <div class="container metrics-board">
+        <div class="metric-item">
+          <span class="metric-label">زوار الموقع</span>
+          <span class="metric-value" id="top-visitor-count">0</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">البائعين</span>
+          <span class="metric-value" id="top-seller-count">0</span>
+        </div>
+        <div class="metric-item date-time-section">
+          <span class="metric-value" id="top-current-date">--/--/----</span>
+          <span class="metric-value" id="top-current-time">--:--:--</span>
+        </div>
+      </div>
+    </div>
+    <div id="store-page" class="page-content container active-page">
+      <div class="main-content-wrapper">
+        <aside class="sidebar">
+          <h3>أقسام المنتجات</h3>
+          <ul class="category-list">
+            <li>
+              <a href="#" class="active" data-category="all">جميع المنتجات</a>
+            </li>
+            <li><a href="#" data-category="electronics">إلكترونيات</a></li>
+            <li><a href="#" data-category="home">أدوات منزلية</a></li>
+            <li><a href="#" data-category="books">كتب</a></li>
+            <li><a href="#" data-category="fashion">أزياء</a></li>
+            <li><a href="#" data-category="sports">رياضة</a></li>
+            <li><a href="#" data-category="beauty">جمال وعناية</a></li>
+            <li><a href="#" data-category="toys">ألعاب</a></li>
+            <li><a href="#" data-category="food">أطعمة</a></li>
+            <li><a href="#" data-category="automotive">سيارات</a></li>
+          </ul>
+        </aside>
+
+        <main class="product-area">
+          <h2>المنتجات</h2>
+          <div class="search-container">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="ابحث باسم المنتج، السعر، أو الكود..."
+            />
+          </div>
+
+          <div id="product-list" class="product-grid"></div>
+        </main>
+      </div>
+    </div>
+
+    <div id="product-details-page" class="page-content container hidden">
+      <button id="back-to-products" class="back-btn">
+        ← عودة إلى المنتجات
+      </button>
+      <div id="product-details-content"></div>
+      <div id="ratings-and-comments">
+        <h3>التقييمات والتعليقات</h3>
+        <div id="comments-list"></div>
+        <form id="comment-form">
+          <h4>أضف تقييمك وتعليقك</h4>
+          <div class="rating-input">
+            <label for="rating-stars">التقييم:</label>
+            <select id="rating-stars">
+              <option value="5">★★★★★ (ممتاز)</option>
+              <option value="4">★★★★☆ (جيد جداً)</option>
+              <option value="3">★★★☆☆ (جيد)</option>
+              <option value="2">★★☆☆☆ (مقبول)</option>
+              <option value="1">★☆☆☆☆ (ضعيف)</option>
+            </select>
+          </div>
+          <textarea
+            id="comment-text"
+            placeholder="اكتب تعليقك هنا..."
+            required
+          ></textarea>
+          <button type="submit">إرسال التعليق</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="dashboard-page" class="page-content container hidden">
+      <div class="main-content-wrapper">
+        <aside class="sidebar">
+          <h3>أقسام المنتجات</h3>
+          <ul class="category-list">
+            <li>
+              <a href="#" class="active" data-category="all">جميع المنتجات</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="electronics">إلكترونيات</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="home">أدوات منزلية</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="books">كتب</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="fashion">أزياء</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="sports">رياضة</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="beauty">جمال وعناية</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="toys">ألعاب</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="food">أطعمة</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+            <li>
+              <a href="#" data-category="automotive">سيارات</a
+              ><button class="add-product-btn">إضافة منتج</button>
+            </li>
+          </ul>
+        </aside>
+
+        <main class="product-area">
+          <h2>منتجاتي</h2>
+          <div id="dashboard-product-list" class="product-grid"></div>
+        </main>
+      </div>
+    </div>
+
+    <div id="cart-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="close-cart-btn">&times;</span>
+        <h3>سلة المشتريات</h3>
+        <div id="cart-items"></div>
+        <div class="cart-total">
+          الإجمالي: <span id="cart-total-price">0 جنيه</span>
+        </div>
+        <button class="checkout-button">إتمام الشراء</button>
+      </div>
+    </div>
+
+    <div id="auth-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="close-auth-btn">&times;</span>
+        <div class="register-container">
+          <div class="language-selector">
+            <button>EG Egypt <span>&#9660;</span></button>
+          </div>
+          <h2>Start your free trial</h2>
+          <p>Get 3 days free, then 3 months for $1/month</p>
+          <div class="social-buttons">
+            <button class="social-btn email-btn" id="show-email-form-btn">
+              <img
+                src="https://img.icons8.com/ios-filled/24/000000/email.png"
+                alt="Email icon"
+              />
+              Sign up with email
+            </button>
+            <button
+              class="social-btn google-btn social-login-btn"
+              data-platform="Google"
+            >
+              <img
+                src="https://img.icons8.com/color/24/000000/google-logo.png"
+                alt="Google icon"
+              />
+              Sign up with Google
+            </button>
+            <button
+              class="social-btn apple-btn social-login-btn"
+              data-platform="Apple"
+            >
+              <img
+                src="https://img.icons8.com/ios-filled/24/000000/mac-os.png"
+                alt="Apple icon"
+              />
+              Sign up with Apple
+            </button>
+            <button
+              class="social-btn facebook-btn social-login-btn"
+              data-platform="Facebook"
+            >
+              <img
+                src="https://img.icons8.com/color/24/000000/facebook-new.png"
+                alt="Facebook icon"
+              />
+              Sign up with Facebook
+            </button>
+          </div>
+          <div class="or-divider">or</div>
+          <div class="login-prompt">
+            Already have a Shopify account?
+            <a href="#" id="go-to-login">Log in &rarr;</a>
+          </div>
+          <p class="terms-text">
+            By proceeding, you agree to the
+            <a href="#">Terms and Conditions</a> and
+            <a href="#">Privacy Policy</a>
+          </p>
+          <div class="help-links">
+            <a href="#">Help</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="email-signup-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="close-email-btn">&times;</span>
+        <h3>تسجيل الدخول / إنشاء حساب بائع</h3>
+        <form id="email-signup-form">
+          <input
+            type="email"
+            id="email-input"
+            placeholder="البريد الإلكتروني"
+            required
+          />
+          <input
+            type="password"
+            id="password-input"
+            placeholder="كلمة المرور"
+            required
+          />
+
+          <div class="file-input-group">
+            <label for="payment-method-select">طريقة تحصيل الأرباح:</label>
+            <select id="payment-method-select" required>
+              <option value="">-- اختر طريقة الدفع --</option>
+              <option value="vodafone_cash">محفظة فودافون كاش</option>
+              <option value="bank_transfer">حساب بنكي (IBAN)</option>
+              <option value="instapay">InstaPay (رقم هاتف/IBAN)</option>
+            </select>
+          </div>
+          <input
+            type="text"
+            id="payment-account-input"
+            placeholder="رقم الحساب / المحفظة"
+            required
+          />
+          <button type="submit" class="social-btn">
+            تسجيل الدخول / إنشاء حساب
+          </button>
+        </form>
+        <p class="go-back-link">
+          <a href="#" id="go-back-to-register">العودة</a>
+        </p>
+      </div>
+    </div>
+
+    <div id="add-product-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="close-product-modal-btn">&times;</span>
+        <h3>إضافة/تعديل منتج</h3>
+        <form id="product-form">
+          <input type="hidden" id="product-id" />
+          <input
+            type="text"
+            id="store-name"
+            placeholder="اسم المتجر"
+            required
+          />
+          <input
+            type="text"
+            id="product-name"
+            placeholder="اسم المنتج"
+            required
+          />
+          <textarea
+            id="product-description"
+            placeholder="مواصفات المنتج"
+            required
+          ></textarea>
+          <input
+            type="number"
+            id="product-price"
+            placeholder="سعر المنتج"
+            required
+          />
+          <input
+            type="number"
+            id="shipping-cost"
+            placeholder="سعر الشحن"
+            required
+          />
+
+          <div class="file-input-group">
+            <label for="product-image">صورة المنتج:</label>
+            <input type="file" id="product-image" accept="image/*" />
+          </div>
+          <div class="file-input-group">
+            <label for="product-video">فيديو المنتج:</label>
+            <input type="file" id="product-video" accept="video/*" />
+          </div>
+          <div class="file-input-group">
+            <label for="product-audio">صوت المنتج:</label>
+            <input type="file" id="product-audio" accept="audio/*" />
+          </div>
+          <div class="file-input-group">
+            <label for="product-pdf">ملف PDF:</label>
+            <input type="file" id="product-pdf" accept=".pdf" />
+          </div>
+
+          <div class="form-buttons">
+            <button type="submit" class="submit-btn" id="send-product-btn">
+              إرسال
+            </button>
+            <button type="button" class="edit-btn hidden" id="edit-product-btn">
+              تعديل
+            </button>
+            <button
+              type="button"
+              class="delete-btn hidden"
+              id="delete-product-btn"
+            >
+              حذف
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="payment-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="close-payment-btn">&times;</span>
+        <h3>اختيار طريقة الدفع</h3>
+        <div class="payment-options">
+          <button class="payment-btn" data-method="cib">
+            <img
+              src="https://img.icons8.com/color/48/000000/cib.png"
+              alt="CIB"
+            />
+            CIB
+          </button>
+          <button class="payment-btn" data-method="instapay">
+            <img
+              src="https://img.icons8.com/color/48/000000/instapay.png"
+              alt="InstaPay"
+            />
+            InstaPay
+          </button>
+          <button class="payment-btn" data-method="vodafone-cash">
+            <img
+              src="https://img.icons8.com/color/48/000000/vodafone-cash.png"
+              alt="Vodafone Cash"
+            />
+            فودافون كاش
+          </button>
+          <button class="payment-btn" data-method="fawry">
+            <img
+              src="https://img.icons8.com/color/48/000000/fawry.png"
+              alt="Fawry"
+            />
+            فوري
+          </button>
+          <button class="payment-btn" data-method="paypal">
+            <img
+              src="https://img.icons8.com/color/48/000000/paypal.png"
+              alt="PayPal"
+            />
+            PayPal
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2024 متجري الإلكتروني. جميع الحقوق محفوظة.</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

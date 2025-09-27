@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>لوحة التحكم</h1>
+            <nav>
+                <a href="index.html">المتجر</a>
+                <a href="#" id="logout-btn">تسجيل الخروج</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-content-wrapper container">
+        <aside class="sidebar">
+            <h3>أقسام المنتجات</h3>
+            <ul class="category-list">
+                <li><a href="#" class="active" data-category="all">جميع المنتجات</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="electronics">إلكترونيات</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="home">أدوات منزلية</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="books">كتب</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="fashion">أزياء</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="sports">رياضة</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="beauty">جمال وعناية</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="toys">ألعاب</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="food">أطعمة</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" data-category="automotive">سيارات</a><button class="add-product-btn">إضافة منتج</button></li>
+            </ul>
+        </aside>
+
+        <main class="product-area">
+            <h2>منتجاتي</h2>
+            <div id="dashboard-product-list" class="product-grid">
+                </div>
+        </main>
+    </div>
+
+    <div id="add-product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-product-modal-btn">&times;</span>
+            <h3>إضافة/تعديل منتج</h3>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <input type="text" id="store-name" placeholder="اسم المتجر" required>
+                <input type="text" id="product-name" placeholder="اسم المنتج" required>
+                <textarea id="product-description" placeholder="مواصفات المنتج" required></textarea>
+                <input type="number" id="product-price" placeholder="سعر المنتج" required>
+                <input type="number" id="shipping-cost" placeholder="سعر الشحن" required>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="submit-btn">إرسال</button>
+                    <button type="button" class="edit-btn">تعديل</button>
+                    <button type="button" class="delete-btn">حذف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 متجري الإلكتروني. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
