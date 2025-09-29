@@ -1,0 +1,985 @@
+/* ------------------------------------------------------------------------- */
+/* 1. GENERAL STYLES AND RESETS */
+/* ------------------------------------------------------------------------- */
+
+:root {
+    --primary-color: #007bff; /* أزرق */
+    --secondary-color: #6c757d; /* رمادي */
+    --accent-color: #28a745; /* أخضر */
+    --light-bg: #f8f9fa;
+    --dark-bg: #ffffff;
+    --text-color: #343a40;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --hover-color: #0056b3;
+}
+
+/* Dark Mode Variables (Overridden below) */
+.dark-mode {
+    --primary-color: #3b82f6;
+    --secondary-color: #9ca3af;
+    --accent-color: #10b981;
+    --light-bg: #1f2937;
+    --dark-bg: #374151;
+    --text-color: #e5e7eb;
+    --card-bg: #374151;
+    --border-color: #4b5563;
+    --hover-color: #2563eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    direction: rtl; /* دعم اللغة العربية */
+    transition: background-color 0.3s, color 0.3s;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--hover-color);
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.back-btn {
+    background: var(--secondary-color);
+    color: white;
+    margin: 20px 0;
+    display: inline-block;
+}
+.back-btn:hover {
+    background: #5a6268;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 2. HEADER AND NAVIGATION */
+/* ------------------------------------------------------------------------- */
+
+header {
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.5em;
+    color: var(--primary-color);
+}
+
+header nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+header nav a {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+header nav a:hover {
+    color: var(--primary-color);
+}
+
+/* Cart Icon */
+.cart-icon-container {
+    position: relative;
+    cursor: pointer;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.cart-icon {
+    width: 24px;
+    height: 24px;
+    filter: invert(var(--text-color-filter, 0)); /* للوضع الداكن */
+}
+
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #ff0000;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7em;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 3. NEW: TOP METRICS BAR (الإحصائيات والساعة) */
+/* ------------------------------------------------------------------------- */
+
+#top-metrics-bar {
+    background-color: var(--card-bg);
+    padding: 10px 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.metrics-board {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    flex-wrap: wrap; /* للسماح بالعناصر بالنزول في سطر جديد على الشاشات الصغيرة */
+    gap: 15px;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0 15px;
+    border-left: 1px solid var(--border-color);
+}
+
+.metric-item:last-child {
+    border-left: none; /* إزالة الخط الفاصل للعنصر الأخير */
+}
+
+.metric-label {
+    font-size: 0.8em;
+    color: var(--secondary-color);
+    margin-bottom: 3px;
+}
+
+.metric-value {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.date-time-section {
+    flex-direction: row;
+    gap: 10px;
+    /* تنسيق خاص للساعة والتاريخ لتبدو متجاورة */
+}
+
+/* Media Query for Metrics Bar on small screens */
+@media (max-width: 600px) {
+    .metrics-board {
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .metric-item {
+        width: 48%; /* عنصران في الصف */
+        border-left: none; /* إزالة الخطوط الفاصلة لمرونة العرض */
+        padding: 5px 0;
+    }
+    .date-time-section {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-color);
+    }
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* 4. LAYOUT AND SIDEBAR */
+/* ------------------------------------------------------------------------- */
+
+.main-content-wrapper {
+    display: flex;
+    gap: 30px;
+    padding: 30px 0;
+}
+
+.sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+}
+
+.sidebar h3 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.category-list {
+    list-style: none;
+}
+
+.category-list li {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-list a {
+    color: var(--text-color);
+    padding: 5px 0;
+    display: block;
+    width: 100%;
+    transition: background-color 0.2s;
+    padding-right: 10px;
+    border-radius: 4px;
+}
+
+.category-list a:hover,
+.category-list a.active {
+    background-color: var(--light-bg);
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.product-area {
+    flex-grow: 1;
+}
+
+.product-area h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: var(--text-color);
+}
+
+/* Search Input Styling */
+.search-container {
+    margin-bottom: 20px;
+}
+
+#search-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    transition: border-color 0.3s;
+}
+
+#search-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 5. PRODUCT GRID AND CARDS */
+/* ------------------------------------------------------------------------- */
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.product-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-info h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: var(--primary-color);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.product-info p {
+    font-size: 0.9em;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.store-name-display {
+    font-style: italic;
+    font-size: 0.85em !important;
+    color: #888 !important;
+    margin-top: 5px;
+}
+
+.product-price {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 10px 0;
+}
+
+.add-to-cart-btn {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+.add-to-cart-btn:hover {
+    background-color: var(--hover-color);
+}
+
+/* Rating Display in Card */
+.rating-card-display {
+    font-size: 0.9em;
+    color: #ffc107; /* لون النجوم أصفر */
+    margin-bottom: 5px;
+}
+
+.rating-stars {
+    color: gold;
+}
+.golden-star {
+    margin-right: 5px;
+    font-size: 1.1em;
+}
+
+.product-release-date {
+    font-size: 0.8em !important;
+    color: #a0a0a0 !important;
+    margin-bottom: 5px !important;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 6. PRODUCT DETAILS PAGE */
+/* ------------------------------------------------------------------------- */
+
+#product-details-page {
+    padding-top: 20px;
+}
+
+.product-details-grid {
+    display: flex;
+    gap: 40px;
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+}
+
+.product-image-container {
+    flex: 1;
+    max-width: 400px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.product-image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.product-details {
+    flex: 2;
+}
+
+.product-details h3 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.price-info {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 15px 0;
+}
+
+.product-description {
+    font-size: 1.1em;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+}
+
+.rating-display {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+.rating-display .rating-average {
+    color: var(--secondary-color);
+    font-size: 0.9em;
+}
+
+.product-media-details {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px dashed var(--border-color);
+    border-radius: 5px;
+    background-color: var(--light-bg);
+}
+.product-media-details h4 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+.product-media-details p {
+    margin-bottom: 5px;
+    font-size: 1em;
+    color: var(--text-color);
+}
+
+/* Comments Section */
+#ratings-and-comments h3 {
+    font-size: 1.8em;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#comments-list {
+    margin-bottom: 30px;
+}
+
+.comment-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.comment-card .comment-rating {
+    color: gold;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.comment-card .comment-text {
+    font-style: italic;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.comment-card .comment-author {
+    font-size: 0.8em;
+    color: var(--secondary-color);
+    text-align: left;
+    margin-top: 10px;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 5px;
+}
+
+#comment-form {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#comment-form h4 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.rating-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#rating-stars {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+}
+
+#comment-text {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 15px;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    resize: vertical;
+}
+
+#comment-form button {
+    background-color: var(--accent-color);
+    color: white;
+    width: 100%;
+}
+
+#comment-form button:hover {
+    background-color: #1e7e34;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 7. DASHBOARD SPECIFIC STYLES */
+/* ------------------------------------------------------------------------- */
+
+.add-product-btn {
+    background: var(--accent-color);
+    color: white;
+    font-size: 0.8em;
+    padding: 5px 8px;
+    border-radius: 4px;
+    opacity: 0.8;
+}
+
+.add-product-btn:hover {
+    opacity: 1;
+}
+
+/* Dashboard product status styling in script.js is inline, but we can set the base card style */
+
+
+/* ------------------------------------------------------------------------- */
+/* 8. MODALS (Popups) */
+/* ------------------------------------------------------------------------- */
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    max-width: 500px;
+    width: 90%;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.close-button {
+    color: var(--secondary-color);
+    float: left;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Cart Modal Specific */
+#cart-items {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding-left: 10px; /* للسكروولبار */
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px dashed var(--border-color);
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.item-info p {
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-quantity button {
+    background: var(--secondary-color);
+    color: white;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+.item-price {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.cart-total-details {
+    padding: 10px 0;
+    text-align: right;
+    border-top: 1px solid var(--primary-color);
+    margin-top: 15px;
+}
+.cart-total-details p {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+.cart-total-details p strong {
+    color: var(--text-color);
+}
+
+
+.cart-total {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 15px 0;
+}
+
+.checkout-button {
+    width: 100%;
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Payment Modal */
+.payment-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.payment-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light-bg);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    font-size: 0.9em;
+    font-weight: 500;
+    height: 100px;
+}
+
+.payment-btn img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 8px;
+}
+
+.payment-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Auth Modal Specific (Shopify style) */
+.register-container {
+    max-width: 350px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.language-selector {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.language-selector button {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-weight: normal;
+    padding: 5px 10px;
+    font-size: 0.9em;
+}
+
+.register-container h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.register-container p {
+    margin-bottom: 20px;
+    color: var(--secondary-color);
+    font-size: 0.9em;
+}
+
+.social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    font-weight: normal;
+    padding: 12px;
+}
+
+.social-btn img {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+.or-divider {
+    color: var(--secondary-color);
+    margin: 20px 0;
+    position: relative;
+    font-size: 0.9em;
+}
+.or-divider::before,
+.or-divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: var(--border-color);
+}
+.or-divider::before { left: 0; }
+.or-divider::after { right: 0; }
+
+.login-prompt {
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.terms-text {
+    font-size: 0.75em !important;
+    line-height: 1.4;
+}
+
+.help-links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 0.8em;
+}
+
+/* Email Signup Form */
+#email-signup-form input,
+#email-signup-form select,
+#product-form input:not([type="file"]),
+#product-form textarea,
+#product-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    font-size: 1em;
+}
+
+#email-signup-form .social-btn {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+#email-signup-form .social-btn:hover {
+    background-color: var(--hover-color);
+}
+
+.go-back-link {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+/* Add/Edit Product Modal */
+#product-form {
+    text-align: right;
+}
+
+#product-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: var(--secondary-color);
+}
+
+.file-input-group {
+    margin-bottom: 15px;
+    padding-top: 5px;
+    border-top: 1px dashed var(--border-color);
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-buttons button {
+    flex-grow: 1;
+}
+
+.submit-btn {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.edit-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* 9. FOOTER */
+/* ------------------------------------------------------------------------- */
+
+footer {
+    background-color: var(--dark-bg);
+    color: var(--secondary-color);
+    padding: 15px 0;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    margin-top: 30px;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* 10. DARK MODE OVERRIDES */
+/* ------------------------------------------------------------------------- */
+
+.dark-mode header {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .cart-icon {
+    filter: invert(1);
+}
+
+.dark-mode .product-card,
+.dark-mode .sidebar,
+.dark-mode .product-details-grid,
+.dark-mode #comment-form,
+.dark-mode .modal-content,
+.dark-mode #top-metrics-bar {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .category-list a:hover,
+.dark-mode .category-list a.active {
+    background-color: var(--dark-bg);
+}
+
+.dark-mode .payment-btn {
+    background-color: var(--dark-bg);
+}
+.dark-mode .payment-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.dark-mode .social-btn {
+    background-color: var(--dark-bg);
+    border-color: var(--border-color);
+}
