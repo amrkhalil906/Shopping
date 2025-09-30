@@ -32,3 +32,5 @@ function addProduct(newProduct) {
 }
 
 // You can add more functions here later, like deleteProduct(productId), etc.
+
+

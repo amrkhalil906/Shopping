@@ -1,17 +1,16 @@
-// Add this helper function at the top of main.js
+// --- ضع هذه الدالة في بداية ملف main.js ---
 function readFileAsDataURL(file) {
     return new Promise((resolve, reject) => {
+        if (!file) {
+            resolve(null);
+            return;
+        }
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
         reader.onerror = reject;
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            resolve(null);
-        }
+        reader.readAsDataURL(file);
     });
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------------------------
     // 1. DATA SIMULATION AND HELPERS
@@ -35,10 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // Auth Credentials (for multi-user system)
-    const userCredentials = [
-        { email: 'amrkhalil258@gmail.com', password: '356895', paymentMethod: 'vodafone_cash', paymentAccount: '01001234567' },
-        { email: 'amr58@gmail.com', password: '486568', paymentMethod: 'bank_transfer', paymentAccount: 'EG320000123456789' }
-    ];
+const userCredentials = JSON.parse(localStorage.getItem('userCredentials')) || [];
+    // --- أضف هذا الكود ---
+// حفظ قائمة المستخدمين المبدئية في LocalStorage إذا لم تكن موجودة
+if (!localStorage.getItem('userCredentials')) {
+    localStorage.setItem('userCredentials', JSON.stringify(userCredentials));
+}
     const adminEmail = 'admin@example.com';
     const adminPassword = '12345';
 
@@ -343,10 +344,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const productCard = document.createElement('div');
             productCard.classList.add('product-card');
             
-            const statusIndicator = product.status === 'pending' ? 
-                `<span style="position: absolute; top: 10px; left: 10px; background: #ffc107; color: #333; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">قيد المراجعة</span>` : 
-                `<span style="position: absolute; top: 10px; left: 10px; background: #28a745; color: #fff; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">مقبول</span>`;
+// --- استبدل الكود القديم بهذا الكود المطور ---
 
+let statusIndicator; // Define the variable
+
+if (product.status === 'rejected') {
+    // حالة الرفض (لون أحمر)
+    statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #e74c3c; color: #fff; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">مرفوض</span>`;
+} else if (product.status === 'pending') {
+    // حالة قيد المراجعة (لون أصفر)
+    statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #ffc107; color: #333; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">قيد المراجعة</span>`;
+} else {
+    // حالة القبول (لون أخضر)
+    statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #28a745; color: #fff; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">مقبول</span>`;
+}  
             const imageUrl = product.image || `https://via.placeholder.com/300x200/999/FFFFFF?text=${product.name}`;
             const releaseDate = formatDateFromId(product.id);
             
@@ -775,7 +786,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Simulated Registration
-            userCredentials.push({ email, password, paymentMethod, paymentAccount });
+// --- استبدل السطر القديم بهذا الكود ---
+
+// تحديث قائمة المستخدمين في LocalStorage
+const allUsers = JSON.parse(localStorage.getItem('userCredentials')) || [];
+allUsers.push({ email, password, paymentMethod, paymentAccount });
+localStorage.setItem('userCredentials', JSON.stringify(allUsers));
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('loggedInUserEmail', email);
             toggleAuthUI(true);
@@ -786,47 +802,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-// Replace your old productForm event listener with this new async version
-productForm.addEventListener('submit', async (e) => { // <-- Notice "async"
-    e.preventDefault();
-    
-    // (Your existing logic for editing a product can remain here if you have it)
-    
-    // --- New Product Submission Logic ---
-    const currentUserEmail = getLoggedInUserEmail();
-    const category = document.querySelector('#dashboard-page .category-list a.active').dataset.category;
+if (productForm) {
+    productForm.addEventListener('submit', async (e) => { // لاحظ كلمة async
+        e.preventDefault();
 
-    // Get the files from the inputs
-    const imageFile = document.getElementById('product-image').files[0];
-    const videoFile = document.getElementById('product-video').files[0];
-    const audioFile = document.getElementById('product-audio').files[0];
-    const pdfFile = document.getElementById('product-pdf').files[0];
+        const currentUserEmail = getLoggedInUserEmail();
+        if (!currentUserEmail) {
+            alert("يجب تسجيل الدخول أولاً لإضافة منتج.");
+            return;
+        }
 
-    // Convert all files to permanent Data URLs
-    const newProduct = {
-        id: Date.now(),
-        userEmail: currentUserEmail,
-        storeName: document.getElementById('store-name').value,
-        name: document.getElementById('product-name').value,
-        description: document.getElementById('product-description').value,
-        price: document.getElementById('product-price').value,
-        shippingCost: document.getElementById('shipping-cost').value,
-        category: category,
-        status: 'pending',
-        
-        // Use the helper function to convert files to storable text
-        image: await readFileAsDataURL(imageFile),
-        video: await readFileAsDataURL(videoFile),
-        audio: await readFileAsDataURL(audioFile),
-        pdf: await readFileAsDataURL(pdfFile)
-    };
+        const category = document.querySelector('#dashboard-page .category-list a.active')?.dataset.category || 'all';
 
-    addProduct(newProduct); // Save the product with the permanent data
-    
-    alert('تمت إضافة المنتج بنجاح وسيتم مراجعته.');
-    productForm.reset(); // Clear the form
-    // Code to close the modal can go here
-});
+        const imageFile = document.getElementById('product-image').files[0];
+        const videoFile = document.getElementById('product-video').files[0];
+        const audioFile = document.getElementById('product-audio').files[0];
+        const pdfFile = document.getElementById('product-pdf').files[0];
+
+        const newProduct = {
+            id: Date.now(),
+            userEmail: currentUserEmail,
+            storeName: document.getElementById('store-name').value,
+            name: document.getElementById('product-name').value,
+            description: document.getElementById('product-description').value,
+            price: document.getElementById('product-price').value,
+            shippingCost: document.getElementById('shipping-cost').value,
+            category: category,
+            status: 'pending',
+            image: await readFileAsDataURL(imageFile),
+            video: await readFileAsDataURL(videoFile),
+            audio: await readFileAsDataURL(audioFile),
+            pdf: await readFileAsDataURL(pdfFile)
+        };
+
+        const currentUserProducts = getUserProducts(currentUserEmail);
+        currentUserProducts.push(newProduct);
+        saveUserProducts(currentUserEmail, currentUserProducts);
+
+        alert('تمت إضافة المنتج بنجاح وسيتم مراجعته.');
+        productForm.reset();
+
+        // السطر الذي تم تعديله
+        document.getElementById('add-product-modal').style.display = 'none'; 
+
+        renderDashboardProducts(category);
+    });
+}
 
     // Dashboard Actions
     if (editBtn) {
@@ -892,47 +913,3 @@ productForm.addEventListener('submit', async (e) => { // <-- Notice "async"
     updateCart(); 
     renderStoreProducts('all');
 });
-
-// --- JavaScript for Hamburger Menu ---
-
-// Get the button and the navigation links container
-const hamburgerMenu = document.getElementById('hamburger-menu');
-const navLinks = document.getElementById('nav-links');
-
-// Add a click event listener to the button
-hamburgerMenu.addEventListener('click', () => {
-    // Toggle the 'active' class on the nav-links container
-    navLinks.classList.toggle('active');
-});
-
-// Let's assume this is your seller.js or main.js
-
-// 1. When the page loads, try to get products from LocalStorage
-// JSON.parse converts the saved string back into an array
-let products = JSON.parse(localStorage.getItem('myProducts')) || [];
-
-// Function to save the products array to LocalStorage
-// JSON.stringify converts the array into a string to be stored
-function saveProducts() {
-    localStorage.setItem('myProducts', JSON.stringify(products));
-}
-
-// Function to display products (you likely already have this)
-function displayProducts() {
-    const productList = document.getElementById('product-list'); // Or your product list container
-    productList.innerHTML = '';
-    products.forEach(product => {
-        // Your code to create and show a product card goes here...
-    });
-}
-
-// 2. When you add a new product, update the array AND save it
-function addProduct(newProduct) {
-    products.push(newProduct); // Add the new product to the array
-    saveProducts(); // <<-- The important new step: save the updated array
-    displayProducts(); // Refresh the display
-}
-
-// --- INITIALIZE THE PAGE ---
-// When the page first loads, display the products we found in LocalStorage
-displayProducts();
