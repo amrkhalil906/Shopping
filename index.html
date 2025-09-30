@@ -8,25 +8,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"/>
   </head>
 <body class="dark-mode">
-      <header>
-      <div class="container">
+<header>
+    <div class="container">
         <h1>متجري الإلكتروني</h1>
         <nav>
-          <a href="#" id="home-link">الرئيسية</a>
-          <a href="#" id="my-products-link" class="hidden">منتجاتي</a>
-          <a href="#" id="auth-link">تسجيل بائع جديد</a>
-          <a href="#" id="admin-link">مسؤول</a>
-          <div class="cart-icon-container">
-            <span class="cart-count">0</span>
-            <img
-              src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png"
-              alt="سلة المشتريات"
-              class="cart-icon"
-            />
-          </div>
+            <button class="hamburger-menu" id="hamburger-menu">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </button>
+            
+            <div class="nav-links" id="nav-links">
+                <a href="#" id="home-link">الرئيسية</a>
+                <a href="#" id="my-products-link" class="hidden">منتجاتي</a>
+                <a href="#" id="auth-link">تسجيل بائع جديد</a>
+                <a href="#" id="admin-link">مسؤول</a>
+            </div>
+
+            <div class="cart-icon-container">
+                <span class="cart-count">0</span>
+                <img
+                    src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png"
+                    alt="سلة المشتريات"
+                    class="cart-icon"
+                />
+            </div>
+            <button id="theme-toggle-btn" class="theme-toggle-button"></button>
         </nav>
-      </div>
-    </header>
+    </div>
+</header>
 
     <div id="top-metrics-bar">
       <div class="container metrics-board">
@@ -408,6 +418,7 @@
       </div>
     </footer>
 
-    <script src="assets/js/script.js"></script>
+<script src="assets/js/product-manager.js"></script>
+<script src="assets/js/main.js"></script>
   </body>
 </html>

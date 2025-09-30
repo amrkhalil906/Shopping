@@ -1,7 +1,12 @@
 /* ------------------------------------------------------------------------- */
 /* 1. GENERAL STYLES AND RESETS */
 /* ------------------------------------------------------------------------- */
-
+/* Add this at the VERY TOP of styles.css */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 :root {
     --primary-color: #007bff; /* أزرق */
     --secondary-color: #6c757d; /* رمادي */
@@ -25,6 +30,7 @@
     --card-bg: #374151;
     --border-color: #4b5563;
     --hover-color: #2563eb;
+    
 }
 
 * {
@@ -42,11 +48,14 @@ body {
     line-height: 1.6;
 }
 
+/* In assets/css/styles.css - General Styles */
+
 .container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 90%; /* سيأخذ المحتوى 90% من عرض الشاشة */
+    max-width: 1200px; /* على الشاشات الكبيرة جدًا، لن يتجاوز العرض 1200 بكسل */
+    margin: 0 auto; /* هذا الكود السحري يقوم بتوسيط الحاوية أفقيًا */
 }
+
 
 a {
     color: var(--primary-color);
@@ -680,7 +689,7 @@ header nav a:hover {
 
 .item-quantity {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     gap: 10px;
 }
 
@@ -982,4 +991,265 @@ footer {
 .dark-mode .social-btn {
     background-color: var(--dark-bg);
     border-color: var(--border-color);
+}
+
+/* الأنماط الأساسية (للهواتف) - Mobile First */
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* عمود واحد فقط على الشاشات الصغيرة */
+    gap: 20px;
+}
+
+/* ------------------------------------- */
+
+/* للشاشات الأكبر (الأجهزة اللوحية) */
+/* This will apply styles for screens that are 768px wide or wider */
+@media (min-width: 768px) {
+    .product-grid {
+        /* عرض عمودين */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ------------------------------------- */
+
+/* للشاشات الكبيرة (سطح المكتب) */
+/* This will apply styles for screens that are 1024px wide or wider */
+@media (min-width: 1024px) {
+    .product-grid {
+        /* عرض 4 أعمدة */
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* --- CSS for Hamburger Menu --- */
+
+/* Style the hamburger button */
+.hamburger-menu {
+    display: none; /* Hidden by default on desktop */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+}
+
+.hamburger-menu .line {
+    display: block;
+    width: 30px;
+    height: 3px;
+    background-color: white;
+}
+
+/* Media Query for Mobile */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Hide the links container */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 70px; /* Adjust based on your header's height */
+        left: 0;
+        background-color: #333;
+    }
+
+    .nav-links.active {
+        display: flex; /* Show the links when active */
+    }
+
+    .nav-links a {
+        text-align: center;
+        padding: 15px;
+        width: 100%;
+        border-top: 1px solid #444;
+    }
+
+    .hamburger-menu {
+        display: flex; /* Show the hamburger button */
+    }
+}
+
+/* In assets/css/styles.css, inside the @media (max-width: 768px) block */
+
+.main-content-wrapper {
+    flex-direction: column; /* Stack items vertically */
+}
+
+.sidebar {
+    margin-bottom: 20px; /* Add some space below the sidebar */
+}
+
+/* In assets/css/styles.css */
+
+/* --- 1. Default Style for Desktop --- */
+.main-content-wrapper {
+    display: flex;
+    flex-direction: row; /* This is the key for desktop view */
+    gap: 20px;
+}
+
+/* --- 2. Media Query for Mobile --- */
+@media (max-width: 768px) {
+    /* ... your other mobile styles for the hamburger menu ... */
+
+    .main-content-wrapper {
+        flex-direction: column; /* This will now ONLY apply to small screens */
+    }
+
+    .sidebar {
+        margin-bottom: 20px;
+    }
+}
+
+/* Add this to your general styles in styles.css */
+
+.sidebar,
+.product-area {
+    padding: 15px; /* You can change the value to what you see fit */
+}
+
+/* Styling for Admin Action Buttons */
+.action-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 5px; /* Adds space between buttons */
+}
+
+.accept-btn {
+    background-color: #28a745; /* Green */
+}
+
+.accept-btn:hover {
+    background-color: #218838; /* Darker Green */
+}
+
+.reject-btn {
+    background-color: #dc3545; /* Red */
+}
+
+.reject-btn:hover {
+    background-color: #c82333; /* Darker Red */
+}
+
+/* Spacing for Navigation Links */
+.nav-links a {
+    margin: 0 15px; /* Adds 15px space on the left and right of each link */
+    padding: 5px 0; /* Adds a little vertical padding for a better click area */
+}
+
+/* Styling for Admin Action Buttons - CORRECTED */
+.approve-btn,
+.reject-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+}
+
+.approve-btn {
+    background-color: #28a745; /* Green */
+}
+
+.approve-btn:hover {
+    background-color: #218838; /* Darker Green */
+}
+
+.reject-btn {
+    background-color: #dc3545; /* Red */
+}
+
+.reject-btn:hover {
+    background-color: #c82333; /* Darker Red */
+}
+
+
+/* This is the new code for the button container */
+/* Final correct styling for the product action buttons container */
+.product-actions {
+    justify-content: space-evenly;
+    gap: 0;
+    margin-top: 3px;
+    width: 100%;
+    align-content: stretch;
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+    align-items: stretch;              /* Ensures the container takes full width */
+}
+
+
+.product-actions {
+    display: flex;
+    justify-content: flex-end; /* Aligns buttons to the right */
+    gap: 10px;                 /* Creates space between buttons */
+    margin-top: 15px;          /* Adds space above the buttons */
+    width: 100%;               /* Ensures the container takes full width */
+}
+
+
+/* --- Responsive Styles for All Modals --- */
+@media (max-width: 768px) {
+    
+    /* Adjust the main modal content box */
+    .modal-content {
+        width: 90%; /* Make the modal take 90% of the screen width */
+        max-width: 500px; /* But not more than 500px */
+        padding: 20px;
+    }
+
+    /* Make form elements inside modals easy to use on touch screens */
+    .modal input[type="text"],
+    .modal input[type="email"],
+    .modal input[type="password"],
+    .modal input[type="number"],
+    .modal textarea,
+    .modal button {
+        width: 100%; /* Make them full-width */
+        padding: 12px; /* Increase padding for easier tapping */
+        font-size: 16px; /* Make text readable */
+        margin-bottom: 10px; /* Add space between them */
+    }
+
+    /* Ensure the last button doesn't have extra margin */
+    .modal button:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* --- Handling Tall Modal Content --- */
+.modal-content {
+    max-height: 85vh; /* 1. Set max height to 85% of the viewport/screen height */
+    overflow-y: auto; /* 2. Add a vertical scrollbar ONLY if content overflows */
+}
+
+/* Styling for the new theme toggle button */
+.theme-toggle-button {
+    background: none;
+    border: 1px solid #FFF; /* White border */
+    color: #FFF; /* White icon color */
+    border-radius: 50%; /* Makes it a circle */
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-toggle-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
