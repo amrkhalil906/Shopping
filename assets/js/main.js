@@ -1015,4 +1015,14 @@ const navLinks = document.getElementById('nav-links');
 hamburgerMenu.addEventListener('click', () => {
     // Toggle the 'active' class on the nav-links container
     navLinks.classList.toggle('active');
+    // --- Add this code to automatically close the menu on link click ---
+if (navLinks) {
+    navLinks.addEventListener('click', (e) => {
+        // Check if the clicked item is a link (an A tag)
+        if (e.target.tagName === 'A') {
+            // Remove the 'active' class to trigger the closing animation
+            navLinks.classList.remove('active');
+        }
+    });
+}
 });

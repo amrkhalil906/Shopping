@@ -213,25 +213,6 @@ header nav a:hover {
     /* تنسيق خاص للساعة والتاريخ لتبدو متجاورة */
 }
 
-/* Media Query for Metrics Bar on small screens */
-@media (max-width: 600px) {
-    .metrics-board {
-        justify-content: space-between;
-        gap: 10px;
-    }
-    .metric-item {
-        width: 48%; /* عنصران في الصف */
-        border-left: none; /* إزالة الخطوط الفاصلة لمرونة العرض */
-        padding: 5px 0;
-    }
-    .date-time-section {
-        width: 100%;
-        justify-content: center;
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid var(--border-color);
-    }
-}
 
 
 /* ------------------------------------------------------------------------- */
@@ -999,29 +980,7 @@ footer {
     gap: 20px;
 }
 
-/* ------------------------------------- */
 
-/* للشاشات الأكبر (الأجهزة اللوحية) */
-/* This will apply styles for screens that are 768px wide or wider */
-@media (min-width: 768px) {
-    .product-grid {
-        /* عرض عمودين */
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* ------------------------------------- */
-
-/* للشاشات الكبيرة (سطح المكتب) */
-/* This will apply styles for screens that are 1024px wide or wider */
-@media (min-width: 1024px) {
-    .product-grid {
-        /* عرض 4 أعمدة */
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-/* --- CSS for Hamburger Menu --- */
 
 /* Style the hamburger button */
 .hamburger-menu {
@@ -1044,35 +1003,6 @@ footer {
     background-color: white;
 }
 
-/* Media Query for Mobile */
-@media (max-width: 768px) {
-    .nav-links {
-        display: none; /* Hide the links container */
-        flex-direction: column;
-        width: 100%;
-        position: absolute;
-        top: 70px; /* Adjust based on your header's height */
-        left: 0;
-        background-color: #333;
-    }
-
-    .nav-links.active {
-        display: flex; /* Show the links when active */
-    }
-
-    .nav-links a {
-        text-align: center;
-        padding: 15px;
-        width: 100%;
-        border-top: 1px solid #444;
-    }
-
-    .hamburger-menu {
-        display: flex; /* Show the hamburger button */
-    }
-}
-
-/* In assets/css/styles.css, inside the @media (max-width: 768px) block */
 
 
 
@@ -1094,16 +1024,7 @@ footer {
 }
 
 
-/* --- 2. Media Query for Mobile --- */
-@media (max-width: 768px) {
-    /* ... your other mobile styles for the hamburger menu ... */
 
-
-
-    .sidebar {
-        margin-bottom: 20px;
-    }
-}
 
 /* Add this to your general styles in styles.css */
 
@@ -1199,34 +1120,7 @@ footer {
 }
 
 
-/* --- Responsive Styles for All Modals --- */
-@media (max-width: 768px) {
-    
-    /* Adjust the main modal content box */
-    .modal-content {
-        width: 90%; /* Make the modal take 90% of the screen width */
-        max-width: 500px; /* But not more than 500px */
-        padding: 20px;
-    }
 
-    /* Make form elements inside modals easy to use on touch screens */
-    .modal input[type="text"],
-    .modal input[type="email"],
-    .modal input[type="password"],
-    .modal input[type="number"],
-    .modal textarea,
-    .modal button {
-        width: 100%; /* Make them full-width */
-        padding: 12px; /* Increase padding for easier tapping */
-        font-size: 16px; /* Make text readable */
-        margin-bottom: 10px; /* Add space between them */
-    }
-
-    /* Ensure the last button doesn't have extra margin */
-    .modal button:last-child {
-        margin-bottom: 0;
-    }
-}
 
 /* --- Handling Tall Modal Content --- */
 .modal-content {
@@ -1296,40 +1190,7 @@ footer {
 /* === Responsive Styles for Main Content === */
 /* =============================================== */
 
-@media (max-width: 768px) {
 
-    .sidebar,
-    .product-area {
-        width: 100%;
-        max-width: 100%;
-        margin-bottom: 20px;
-    }
-    
-    .sidebar h3 {
-        text-align: center;
-    }
-
-    /* START: NEW CODE FOR CATEGORY LIST STYLING */
-    .sidebar .category-list {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 0;
-        list-style: none; /* Remove default list bullets */
-    }
-
-.sidebar .category-list li {
-    width:70%;
-    text-align: center;
-    padding: 5px 0; /* تم تقليل الارتفاع */
-    border-bottom: 1px solid #444;
-}
-
-    .sidebar .category-list li:last-child {
-        border-bottom: none;
-    }
-    /* END: NEW CODE */
-}
 
 
 /* ========================================= */
@@ -1343,33 +1204,22 @@ html, body {
 }
 
 
-@media (max-width: 768px) {
-    .main-content-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* ... other mobile styles ... */
-}
 
 /* ========================================= */
-/* === Making the Dashboard Sidebar Sticky === */
+/* === Forcing the Header to be Sticky ===== */
 /* ========================================= */
 
-/* This code will only apply on desktop screens (wider than 768px) */
-@media (min-width: 769px) {
-    .sidebar {
-        position: -webkit-sticky; /* For Safari browser compatibility */
-        position: sticky;
-        top: 80px; /* The distance from the top where it will "stick". Adjust this value if needed. */
-        align-self: flex-start; /* Important for flexbox containers */
-        
-        /* This makes the sidebar itself scrollable if its content is very long */
-        height: calc(100vh - 100px); /* Adjust 100px to match the 'top' value + some margin */
-        overflow-y: auto;
-    }
-}
+header {
+    position: -webkit-sticky !important; /* For Safari */
+    position: sticky !important; /* The !important flag gives this rule top priority */
+    top: 0 !important;
+    width: 100%;
+    z-index: 1001;
 
+    /* These properties likely don't need !important but we add them for consistency */
+    background-color: #222831 !important; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+}
 /* ========================================= */
 /* === Force Normal Page Scroll Behavior === */
 /* ========================================= */
@@ -1437,10 +1287,144 @@ header {
     z-index: 1001;      /* A high number to keep it on top */
 }
 
-/* We also need to make sure the mobile menu's z-index is high,
-   but slightly lower than the header's z-index. */
+/* ==================================================================== */
+/* === RESPONSIVE STYLES (CORRECTED ORDER) ============================ */
+/* ==================================================================== */
+
+/* --- 1. General Mobile Screens (768px and smaller) --- */
 @media (max-width: 768px) {
+    
+    /* Layout */
+    .main-content-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sidebar,
+    .product-area {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    /* Sidebar Content */
+    .sidebar h3 {
+        text-align: center;
+    }
+    
+    .sidebar .category-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        list-style: none;
+    }
+
+    .sidebar .category-list li {
+        width: 100%;
+        text-align: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #444;
+    }
+
+    .sidebar .category-list li:last-child {
+        border-bottom: none;
+    }
+
+    /* Hamburger Menu & Navigation */
+    .hamburger-menu {
+        display: flex;
+    }
+
     #nav-links {
-        z-index: 1000; /* High, but lower than the header */
+        position: fixed;
+        top: 70px;
+        right: 0;
+        width: 100%;
+        height: auto;
+        background-color: #222831;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.4s ease-in-out;
+        padding: 20px 0;
+        border-bottom-left-radius: 15px;
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+    }
+
+    #nav-links.active {
+        transform: translateX(0);
+    }
+    
+    #nav-links a {
+        font-size: 1.1rem;
+        color: #fff;
+        width: 85%;
+        text-align: center;
+        padding: 15px 0;
+        margin: 0;
+        border-bottom: 1px solid #444;
+    }
+    #nav-links a:last-child {
+        border-bottom: none;
+    }
+
+    /* Modal Styles */
+    .modal-content {
+        width: 90%;
+    }
+}
+
+
+/* --- 2. Small Mobile Screens (600px and smaller) --- */
+@media (max-width: 600px) {
+    .metrics-board {
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .metric-item {
+        width: 48%;
+        border-left: none;
+        padding: 5px 0;
+    }
+    .date-time-section {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-color);
+    }
+}
+
+
+/* --- 3. Tablets and Small Desktops (769px and wider) --- */
+/* This is now read BEFORE the large desktop rule */
+@media (min-width: 769px) {
+    .product-grid {
+        /* 2 columns for tablets */
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sidebar {
+        /* Sticky sidebar for desktop */
+        position: -webkit-sticky;
+        position: sticky;
+        top: 80px;
+        align-self: flex-start;
+        height: calc(100vh - 100px);
+        overflow-y: auto;
+    }
+}
+
+
+/* --- 4. Large Desktop Screens (1024px and wider) --- */
+/* This is now read AFTER the tablet rule, so it can override it */
+@media (min-width: 1024px) {
+    .product-grid {
+        /* 4 columns for large screens */
+        grid-template-columns: repeat(4, 1fr);
     }
 }
