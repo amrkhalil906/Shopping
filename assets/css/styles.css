@@ -1425,3 +1425,22 @@ main.container {
 .admin-wrapper {
     flex-grow: 1;
 }
+
+/* ========================================= */
+/* === Header Stacking Order Fix (z-index) === */
+/* ========================================= */
+
+/* Give the main header a position and a very high z-index
+   to ensure it stays above all other content, including the mobile menu. */
+header {
+    position: relative; /* This is necessary for z-index to work */
+    z-index: 1001;      /* A high number to keep it on top */
+}
+
+/* We also need to make sure the mobile menu's z-index is high,
+   but slightly lower than the header's z-index. */
+@media (max-width: 768px) {
+    #nav-links {
+        z-index: 1000; /* High, but lower than the header */
+    }
+}
