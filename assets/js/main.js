@@ -1,3 +1,32 @@
+/**
+ * Gathers all ACCEPTED products from all users for the public store,
+ * ensuring no duplicates from repeated users.
+ * @returns {Array} A single array of all accepted products.
+ */
+function getAllAcceptedProducts() {
+    const allUsers = JSON.parse(localStorage.getItem('userCredentials')) || [];
+    let allProducts = [];
+    const processedEmails = new Set(); // Use a Set to track processed emails
+
+    allUsers.forEach(user => {
+        // If we have already processed this email, skip to the next user
+        if (processedEmails.has(user.email)) {
+            return;
+        }
+
+        const userProductsKey = `userProducts_${user.email}`;
+        const userProducts = JSON.parse(localStorage.getItem(userProductsKey)) || [];
+        
+        // Filter for ONLY accepted products for the public store
+        const acceptedProducts = userProducts.filter(p => p.status === 'accepted');
+        
+        allProducts = allProducts.concat(acceptedProducts);
+        
+        // Add the email to the set of processed emails
+        processedEmails.add(user.email);
+    });
+    return allProducts;
+}
 // --- ضع هذه الدالة في بداية ملف main.js ---
 function readFileAsDataURL(file) {
     return new Promise((resolve, reject) => {
@@ -114,7 +143,6 @@ if (!localStorage.getItem('userCredentials')) {
     const adminLink = document.getElementById('admin-link');
     const storePage = document.getElementById('store-page');
     const dashboardPage = document.getElementById('dashboard-page');
-    const categoryLinks = document.querySelectorAll('.category-list a');
 
     const productList = document.getElementById('product-list');
     const dashboardProductList = document.getElementById('dashboard-product-list'); 
@@ -149,6 +177,13 @@ if (!localStorage.getItem('userCredentials')) {
     const topSellerCount = document.getElementById('top-seller-count');
     const topCurrentDate = document.getElementById('top-current-date');
     const topCurrentTime = document.getElementById('top-current-time');
+    const dashboardSearchInput = document.getElementById('dashboard-search-input');
+    if (dashboardSearchInput) {
+    dashboardSearchInput.addEventListener('input', () => {
+        const activeCategory = document.querySelector('#dashboard-page .category-list a.active')?.dataset.category || 'all';
+        renderDashboardProducts(activeCategory, dashboardSearchInput.value);
+    });
+}
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let currentProductId = null;
@@ -251,7 +286,7 @@ if (!localStorage.getItem('userCredentials')) {
         if (!productList) return;
         productList.innerHTML = '';
         
-        const masterList = getMasterProductList();
+    const masterList = getAllAcceptedProducts();
         
         // 1. Filter by Search Term
         let filteredProducts = masterList.filter(product => {
@@ -297,7 +332,7 @@ if (!localStorage.getItem('userCredentials')) {
             const releaseDate = formatDateFromId(product.id);
             
             productCard.innerHTML = `
-                <img src="${imageUrl}" alt="${product.name}">
+                <img src="${imageUrl}" alt="${product.name}" loading="lazy">
                 <div class="product-info">
                     <h3>${product.name}</h3>
                     
@@ -325,69 +360,83 @@ if (!localStorage.getItem('userCredentials')) {
     };
 
     // Render Products for Dashboard (Newest First)
-    const renderDashboardProducts = (category) => {
-        if (!dashboardProductList) return;
-        dashboardProductList.innerHTML = '';
-        const currentUserEmail = getLoggedInUserEmail();
-        let currentUserProducts = getUserProducts(currentUserEmail);
+const renderDashboardProducts = (category = 'all', searchTerm = '') => {
+    if (!dashboardProductList) return;
+    dashboardProductList.innerHTML = '';
+    const currentUserEmail = getLoggedInUserEmail();
+    let currentUserProducts = getUserProducts(currentUserEmail);
 
-        const filteredProducts = category === 'all' ? currentUserProducts : currentUserProducts.filter(p => p.category === category);
-        
-        // Sorting: Newest first (by ID)
-        filteredProducts.sort((a, b) => b.id - a.id);
+    // 1. Filter by Search Term
+    let filteredProducts = currentUserProducts.filter(product => {
+        const query = searchTerm.toLowerCase().trim();
+        if (!query) return true; // Show all if search is empty
+        const searchableText = [product.name, product.description, product.category, product.price.toString()].join(' ').toLowerCase();
+        return searchableText.includes(query);
+    });
 
-        if (filteredProducts.length === 0) {
-            dashboardProductList.innerHTML = '<p style="text-align: center; color: #888;">لا توجد منتجات في هذا القسم.</p>';
-            return;
+    // 2. Filter by Category
+    if (category !== 'all') {
+        filteredProducts = filteredProducts.filter(p => p.category === category);
+    }
+
+    // 3. Sorting
+    filteredProducts.sort((a, b) => b.id - a.id);
+
+    if (filteredProducts.length === 0) {
+        dashboardProductList.innerHTML = '<p style="text-align: center; color: #888;">لا توجد منتجات مطابقة لعملية البحث أو في هذا القسم.</p>';
+        return;
+    }
+
+    filteredProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.classList.add('product-card');
+
+        let statusIndicator;
+        if (product.status === 'rejected') {
+            statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #e74c3c; color: #fff; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">مرفوض</span>`;
+        } else if (product.status === 'pending') {
+            statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #ffc107; color: #333; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">قيد المراجعة</span>`;
+        } else {
+            statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #28a745; color: #fff; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">مقبول</span>`;
         }
-        filteredProducts.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.classList.add('product-card');
-            
-// --- استبدل الكود القديم بهذا الكود المطور ---
 
-let statusIndicator; // Define the variable
+        const imageUrl = product.image || `https://via.placeholder.com/300x200/999/FFFFFF?text=${product.name}`;
+        const releaseDate = formatDateFromId(product.id);
 
-if (product.status === 'rejected') {
-    // حالة الرفض (لون أحمر)
-    statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #e74c3c; color: #fff; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">مرفوض</span>`;
-} else if (product.status === 'pending') {
-    // حالة قيد المراجعة (لون أصفر)
-    statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #ffc107; color: #333; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">قيد المراجعة</span>`;
-} else {
-    // حالة القبول (لون أخضر)
-    statusIndicator = `<span style="position: absolute; top: 10px; left: 10px; background: #28a745; color: #fff; padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;">مقبول</span>`;
-}  
-            const imageUrl = product.image || `https://via.placeholder.com/300x200/999/FFFFFF?text=${product.name}`;
-            const releaseDate = formatDateFromId(product.id);
-            
-            productCard.innerHTML = `
-                ${statusIndicator}
-                <img src="${imageUrl}" alt="${product.name}">
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <p class="product-release-date">تاريخ الإضافة: ${releaseDate}</p>
-                    <p>${product.description ? product.description.substring(0, 40) + '...' : ''}</p>
-                    ${product.storeName ? `<p class="store-name-display">${product.storeName}</p>` : ''}
-                    <div class="product-price">${product.price} جنيه</div>
-                </div>
-            `;
-            productCard.addEventListener('click', () => {
-                document.getElementById('product-id').value = product.id;
-                document.getElementById('store-name').value = product.storeName || '';
-                document.getElementById('product-name').value = product.name;
-                document.getElementById('product-description').value = product.description;
-                document.getElementById('product-price').value = product.price;
-                document.getElementById('shipping-cost').value = product.shippingCost || '';
-                
-                submitBtn.classList.add('hidden');
-                editBtn.classList.remove('hidden');
-                deleteBtn.classList.remove('hidden');
-                addProductModal.style.display = 'flex';
-            });
-            dashboardProductList.appendChild(productCard);
+productCard.innerHTML = `
+    ${statusIndicator}
+    <img src="${imageUrl}" alt="${product.name}" loading="lazy">
+    <div class="product-info">
+        <h3>${product.name}</h3>
+        <p class="product-release-date">تاريخ الإضافة: ${releaseDate}</p>
+        <p>${product.description ? product.description.substring(0, 40) + '...' : ''}</p>
+        ${product.storeName ? `<p class="store-name-display">${product.storeName}</p>` : ''}
+
+        <div class="product-price">${product.price} جنيه</div>
+        </div>
+`;
+
+        productCard.addEventListener('click', () => {
+            document.getElementById('product-id').value = product.id;
+            document.getElementById('store-name').value = product.storeName || '';
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-description').value = product.description;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('shipping-cost').value = product.shippingCost || '';
+
+            document.querySelectorAll('#dashboard-page .category-list a').forEach(link => link.classList.remove('active'));
+            const categoryLink = document.querySelector(`#dashboard-page .category-list a[data-category="${product.category}"]`);
+            if (categoryLink) categoryLink.classList.add('active');
+
+            submitBtn.classList.add('hidden');
+            editBtn.classList.remove('hidden');
+            deleteBtn.classList.remove('hidden');
+            addProductModal.style.display = 'flex';
         });
-    };
+
+        dashboardProductList.appendChild(productCard);
+    });
+};
 
     // Display Product Details Page
     const displayProductDetails = (product) => {
@@ -689,20 +738,62 @@ if (product.status === 'rejected') {
         }
 
         // Category Links
-        if (e.target.closest('.sidebar .category-list a')) {
-            e.preventDefault();
-            const category = e.target.dataset.category;
-            const activePageId = document.querySelector('.page-content:not(.hidden)').id;
+// ====================================================================
+// === FINAL FIX FOR CATEGORY LINKS IN main.js ========================
+// ====================================================================
 
-            if (activePageId === 'store-page') {
-                renderStoreProducts(category, searchInput.value);
-            } else if (activePageId === 'dashboard-page') {
-                renderDashboardProducts(category);
+// Define specific variables for each category list
+const storeCategoryLinks = document.querySelectorAll('#store-page .category-list a');
+const dashboardCategoryLinks = document.querySelectorAll('#dashboard-page .category-list a');
+
+// Add a separate listener for the STORE page categories
+// Add a separate listener for the STORE page categories (with scroll fix)
+storeCategoryLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = e.target.dataset.category;
+
+        storeCategoryLinks.forEach(item => item.classList.remove('active'));
+        e.target.classList.add('active');
+
+        renderStoreProducts(category, searchInput.value); // Renders store products
+
+        // --- START: ADD THE MISSING SCROLL CODE ---
+        setTimeout(() => {
+            const productArea = document.querySelector('#store-page .product-area');
+            if (productArea) {
+                productArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+        }, 100);
+        // --- END: ADD THE MISSING SCROLL CODE ---
+    });
+});
 
-            categoryLinks.forEach(item => item.classList.remove('active'));
-            e.target.classList.add('active');
-        }
+// Add a separate listener for the DASHBOARD page categories (with the scroll fix)
+// Listener for DASHBOARD page categories (with the scroll fix)
+dashboardCategoryLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = e.target.dataset.category;
+
+        dashboardCategoryLinks.forEach(item => item.classList.remove('active'));
+        e.target.classList.add('active');
+
+        renderDashboardProducts(category, dashboardSearchInput.value);
+
+        setTimeout(() => {
+            const productArea = document.querySelector('#dashboard-page .product-area');
+            
+            // --- هذا هو السطر الحاسم ---
+            console.log("النتيجة:", productArea); 
+            // --------------------------
+
+            if (productArea) {
+                productArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    });
+});
 
         // Add/Remove item from cart
         if (e.target.classList.contains('add-more-btn')) {
@@ -912,4 +1003,16 @@ if (productForm) {
     showPage('store-page');
     updateCart(); 
     renderStoreProducts('all');
+});
+
+// --- JavaScript for Hamburger Menu ---
+
+// Get the button and the navigation links container
+const hamburgerMenu = document.getElementById('hamburger-menu');
+const navLinks = document.getElementById('nav-links');
+
+// Add a click event listener to the button
+hamburgerMenu.addEventListener('click', () => {
+    // Toggle the 'active' class on the nav-links container
+    navLinks.classList.toggle('active');
 });

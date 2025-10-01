@@ -4,39 +4,41 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>متجر المنتجات</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"/>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
+    />
   </head>
-<body class="dark-mode">
-<header>
-    <div class="container">
-        <h1>متجري الإلكتروني</h1>
+  <body class="dark-mode">
+    <header>
+      <div class="container">
+        <h1> أكبر موقع تسوق الكتروني عربي عالمي</h1>
         <nav>
-            <button class="hamburger-menu" id="hamburger-menu">
-                <span class="line"></span>
-                <span class="line"></span>
-                <span class="line"></span>
-            </button>
-            
-            <div class="nav-links" id="nav-links">
-                <a href="#" id="home-link">الرئيسية</a>
-                <a href="#" id="my-products-link" class="hidden">منتجاتي</a>
-                <a href="#" id="auth-link">تسجيل بائع جديد</a>
-                <a href="#" id="admin-link">مسؤول</a>
-            </div>
+          <button class="hamburger-menu" id="hamburger-menu">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </button>
 
-            <div class="cart-icon-container">
-                <span class="cart-count">0</span>
-                <img
-                    src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png"
-                    alt="سلة المشتريات"
-                    class="cart-icon"
-                />
-            </div>
-            <button id="theme-toggle-btn" class="theme-toggle-button"></button>
+          <div class="nav-links" id="nav-links">
+            <a href="#" id="home-link">الرئيسية</a>
+            <a href="#" id="my-products-link" class="hidden">منتجاتي</a>
+            <a href="#" id="auth-link">تسجيل بائع جديد</a>
+            <a href="#" id="admin-link">مسؤول</a>
+          </div>
+
+          <div class="cart-icon-container">
+            <span class="cart-count">0</span>
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png"
+              alt="سلة المشتريات"
+              class="cart-icon"
+            />
+          </div>
+          <button id="theme-toggle-btn" class="theme-toggle-button"></button>
         </nav>
-    </div>
-</header>
+      </div>
+    </header>
 
     <div id="top-metrics-bar">
       <div class="container metrics-board">
@@ -75,7 +77,6 @@
         </aside>
 
         <main class="product-area">
-          <h2>المنتجات</h2>
           <div class="search-container">
             <input
               type="text"
@@ -169,6 +170,9 @@
 
         <main class="product-area">
           <h2>منتجاتي</h2>
+          <div class="search-container">
+        <input type="search" id="dashboard-search-input" placeholder="ابحث في منتجاتك...">
+         </div>
           <div id="dashboard-product-list" class="product-grid"></div>
         </main>
       </div>
@@ -418,7 +422,7 @@
       </div>
     </footer>
 
-<script src="assets/js/product-manager.js"></script>
-<script src="assets/js/main.js"></script>
+    <script src="assets/js/product-manager.js"></script>
+    <script src="assets/js/main.js"></script>
   </body>
 </html>

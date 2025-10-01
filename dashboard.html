@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-
+    <link rel="stylesheet" href="assets/css/styles.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body class="dark-mode">
-        <header>
+    <header>
         <div class="container">
             <h1>لوحة التحكم</h1>
             <nav>
@@ -23,21 +22,26 @@
         <aside class="sidebar">
             <h3>أقسام المنتجات</h3>
             <ul class="category-list">
-                <li><a href="#" class="active" data-category="all">جميع المنتجات</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="electronics">إلكترونيات</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="home">أدوات منزلية</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="books">كتب</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="fashion">أزياء</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="sports">رياضة</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="beauty">جمال وعناية</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="toys">ألعاب</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="food">أطعمة</a><button class="add-product-btn">إضافة منتج</button></li>
-                <li><a href="#" data-category="automotive">سيارات</a><button class="add-product-btn">إضافة منتج</button></li>
+                <li><a href="#" class="active" data-category="all">جميع المنتجات</a></li>
+                <li><a href="#" data-category="electronics">إلكترونيات</a></li>
+                <li><a href="#" data-category="home">أدوات منزلية</a></li>
+                <li><a href="#" data-category="books">كتب</a></li>
+                <li><a href="#" data-category="fashion">أزياء</a></li>
+                <li><a href="#" data-category="sports">رياضة</a></li>
+                <li><a href="#" data-category="beauty">جمال وعناية</a></li>
+                <li><a href="#" data-category="toys">ألعاب</a></li>
+                <li><a href="#" data-category="food">أطعمة</a></li>
+                <li><a href="#" data-category="automotive">سيارات</a></li>
             </ul>
+             <button class="add-product-btn-main">إضافة منتج جديد</button>
         </aside>
 
         <main class="product-area">
             <h2>منتجاتي</h2>
+            
+            <div class="search-container">
+                <input type="search" id="dashboard-search-input" placeholder="ابحث في منتجاتك (بالاسم، الوصف...)">
+            </div>
             <div id="dashboard-product-list" class="product-grid">
                 </div>
         </main>
@@ -54,6 +58,8 @@
                 <textarea id="product-description" placeholder="مواصفات المنتج" required></textarea>
                 <input type="number" id="product-price" placeholder="سعر المنتج" required>
                 <input type="number" id="shipping-cost" placeholder="سعر الشحن" required>
+                <label for="product-image">صورة المنتج:</label>
+                <input type="file" id="product-image" accept="image/*">
                 
                 <div class="form-buttons">
                     <button type="submit" class="submit-btn">إرسال</button>
@@ -69,7 +75,8 @@
             <p>&copy; 2024 متجري الإلكتروني. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
-    <script src="assets/js/product-manager.js"></script>
+    
+    <script src="assets/js/product-manager.js"></script> 
     <script src="assets/js/dashboard.js"></script>
 </body>
 </html>

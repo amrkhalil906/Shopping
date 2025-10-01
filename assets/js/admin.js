@@ -21,17 +21,31 @@ document.addEventListener('DOMContentLoaded', () => {
      * This is the core function to get data for the admin.
      * @returns {Array} A single array of all products.
      */
-    function getAllProductsFromAllUsers() {
-        const allUsers = JSON.parse(localStorage.getItem('userCredentials')) || [];
-        let allProducts = [];
+/**
+ * Gathers all products from all users, ensuring no duplicates from repeated users.
+ * This is the core function to get data for the admin.
+ * @returns {Array} A single array of all products.
+ */
+function getAllProductsFromAllUsers() {
+    const allUsers = JSON.parse(localStorage.getItem('userCredentials')) || [];
+    let allProducts = [];
+    const processedEmails = new Set(); // Use a Set to track processed emails to avoid duplicates
 
-        allUsers.forEach(user => {
-            const userProductsKey = `userProducts_${user.email}`;
-            const userProducts = JSON.parse(localStorage.getItem(userProductsKey)) || [];
-            allProducts = allProducts.concat(userProducts);
-        });
-        return allProducts;
-    }
+    allUsers.forEach(user => {
+        // If we have already processed this email, skip to the next user
+        if (processedEmails.has(user.email)) {
+            return;
+        }
+
+        const userProductsKey = `userProducts_${user.email}`;
+        const userProducts = JSON.parse(localStorage.getItem(userProductsKey)) || [];
+        allProducts = allProducts.concat(userProducts);
+        
+        // Add the email to the set of processed emails
+        processedEmails.add(user.email);
+    });
+    return allProducts;
+}
 
     /**
      * Finds a product by its ID, updates its status, and saves it back
@@ -83,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const imageUrl = product.image || `https://via.placeholder.com/300x200/999/FFFFFF?text=Product`;
             
             productCard.innerHTML = `
-                <img src="${imageUrl}" alt="${product.name}">
+                <img src="${imageUrl}" alt="${product.name}" loading="lazy">
                 <div class="product-info">
                     <h3>${product.name}</h3>
                     <p><strong>بواسطة:</strong> ${product.userEmail}</p>

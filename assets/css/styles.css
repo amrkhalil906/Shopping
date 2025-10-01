@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 /* ------------------------------------------------------------------------- */
 /* 1. GENERAL STYLES AND RESETS */
 /* ------------------------------------------------------------------------- */
@@ -234,11 +238,6 @@ header nav a:hover {
 /* 4. LAYOUT AND SIDEBAR */
 /* ------------------------------------------------------------------------- */
 
-.main-content-wrapper {
-    display: flex;
-    gap: 30px;
-    padding: 30px 0;
-}
 
 .sidebar {
     width: 250px;
@@ -1075,30 +1074,31 @@ footer {
 
 /* In assets/css/styles.css, inside the @media (max-width: 768px) block */
 
-.main-content-wrapper {
-    flex-direction: column; /* Stack items vertically */
-}
+
 
 .sidebar {
     margin-bottom: 20px; /* Add some space below the sidebar */
 }
 
-/* In assets/css/styles.css */
+/* ========================================= */
+/* === Main Content Wrapper Styles === */
+/* ========================================= */
 
-/* --- 1. Default Style for Desktop --- */
 .main-content-wrapper {
     display: flex;
-    flex-direction: row; /* This is the key for desktop view */
-    gap: 20px;
+    gap: 30px;
+    padding: 30px 0;
+    /* --- This is the fix for the scrolling issue --- */
+    height: auto;
+    overflow: visible;
 }
+
 
 /* --- 2. Media Query for Mobile --- */
 @media (max-width: 768px) {
     /* ... your other mobile styles for the hamburger menu ... */
 
-    .main-content-wrapper {
-        flex-direction: column; /* This will now ONLY apply to small screens */
-    }
+
 
     .sidebar {
         margin-bottom: 20px;
@@ -1264,4 +1264,164 @@ footer {
 /* This shows the modal ONLY when it has the 'active' class */
 .modal.active {
     display: flex; /* Or 'block', depending on your original styling */
+}
+
+/* Styling for the Search Container */
+.search-container {
+    margin-bottom: 20px; /* Add some space below the search bar */
+    width: 100%;
+}
+
+.search-container input[type="search"] {
+    width: 100%; /* Make the search bar take the full width */
+    padding: 12px 15px; /* Make it taller and add inner space */
+    font-size: 1rem; /* Increase font size */
+    border-radius: 8px; /* Add rounded corners */
+    border: 1px solid #555; /* Add a border */
+    background-color: var(--dark-bg); /* Dark background */
+    color: #fff; /* White text */
+    box-sizing: border-box; /* Important for padding and width */
+}
+
+.search-container input[type="search"]::placeholder {
+    color:var(--primary-color); /* Lighter color for placeholder text */
+}
+
+/* =============================================== */
+/* === Responsive Styles for Main Content === */
+/* =============================================== */
+
+/* This code will only apply on screens 768px wide or less */
+/* =============================================== */
+/* === Responsive Styles for Main Content === */
+/* =============================================== */
+
+@media (max-width: 768px) {
+
+    .sidebar,
+    .product-area {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .sidebar h3 {
+        text-align: center;
+    }
+
+    /* START: NEW CODE FOR CATEGORY LIST STYLING */
+    .sidebar .category-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        list-style: none; /* Remove default list bullets */
+    }
+
+.sidebar .category-list li {
+    width:70%;
+    text-align: center;
+    padding: 5px 0; /* تم تقليل الارتفاع */
+    border-bottom: 1px solid #444;
+}
+
+    .sidebar .category-list li:last-child {
+        border-bottom: none;
+    }
+    /* END: NEW CODE */
+}
+
+
+/* ========================================= */
+/* === Force Scrolling Behavior Fix === */
+/* ========================================= */
+
+/* Ensure the main html and body tags can scroll */
+html, body {
+    overflow-y: auto !important; /* Force vertical scrollbar to be visible when content is long */
+    height: auto !important;     /* Allow the body to grow in height */
+}
+
+
+@media (max-width: 768px) {
+    .main-content-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* ... other mobile styles ... */
+}
+
+/* ========================================= */
+/* === Making the Dashboard Sidebar Sticky === */
+/* ========================================= */
+
+/* This code will only apply on desktop screens (wider than 768px) */
+@media (min-width: 769px) {
+    .sidebar {
+        position: -webkit-sticky; /* For Safari browser compatibility */
+        position: sticky;
+        top: 80px; /* The distance from the top where it will "stick". Adjust this value if needed. */
+        align-self: flex-start; /* Important for flexbox containers */
+        
+        /* This makes the sidebar itself scrollable if its content is very long */
+        height: calc(100vh - 100px); /* Adjust 100px to match the 'top' value + some margin */
+        overflow-y: auto;
+    }
+}
+
+/* ========================================= */
+/* === Force Normal Page Scroll Behavior === */
+/* ========================================= */
+
+body, html {
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */
+}
+
+.main-content-wrapper, .product-area {
+    height: auto !important;
+    overflow: visible !important;
+}
+
+
+/* ========================================= */
+/* === Sticky Footer Solution ================ */
+/* ========================================= */
+
+/* 1. Make the body a flex container that fills the screen's height */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Minimum height is 100% of the viewport height */
+}
+
+/* Make the main content area of ALL pages grow to push the footer down */
+.main-content-wrapper,
+main.container {
+    flex-grow: 1;
+}
+
+/* ========================================= */
+/* === Sticky Footer Fix for Admin Page ==== */
+/* ========================================= */
+
+/* We assume the admin page has a unique body class or id if needed, */
+/* but for now, we'll target its main content container. */
+/* Let's find the main container for the admin's content. */
+/* If your admin page content is in a div, give it a class like "admin-container" */
+
+/* Assuming the admin page also has a body tag that needs to be a flex container */
+/* The previous 'body' rule should cover this, but let's make a specific one to be sure */
+
+/* Find the main container div in your admin.html that holds the content */
+/* Let's assume it has a class like 'admin-wrapper' */
+
+/* Please add a class to the main content div in admin.html. For example: */
+/* <div class="admin-wrapper"> ... content ... </div> */
+
+/* Then add this CSS: */
+.admin-wrapper {
+    flex-grow: 1;
 }

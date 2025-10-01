@@ -1,14 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // التحقق من حالة تسجيل الدخول
-    if (localStorage.getItem('isLoggedIn') !== 'true') {
-        window.location.href = 'index.html'; // إعادة التوجيه لصفحة المتجر إذا لم يكن مسجلاً
+    // --- 1. SETUP AND USER AUTHENTICATION ---
+    const getLoggedInUserEmail = () => localStorage.getItem('loggedInUserEmail');
+    const currentUserEmail = getLoggedInUserEmail();
+
+    if (!currentUserEmail) {
+        window.location.href = 'index.html'; // Redirect if not logged in
         return;
     }
 
-    let userProducts = JSON.parse(localStorage.getItem('userProducts')) || [];
+    const userProductsKey = `userProducts_${currentUserEmail}`;
 
-    const productArea = document.querySelector('.product-area');
+    // --- 2. DOM ELEMENTS ---
     const dashboardProductList = document.getElementById('dashboard-product-list');
+    const dashboardSearchInput = document.getElementById('dashboard-search-input');
     const addProductModal = document.getElementById('add-product-modal');
     const closeProductModalBtn = document.getElementById('close-product-modal-btn');
     const productForm = document.getElementById('product-form');
@@ -16,40 +20,69 @@ document.addEventListener('DOMContentLoaded', () => {
     const editBtn = productForm.querySelector('.edit-btn');
     const deleteBtn = productForm.querySelector('.delete-btn');
     const logoutBtn = document.getElementById('logout-btn');
-    
     const categoryLinks = document.querySelectorAll('.category-list a');
+    const mainAddProductBtn = document.querySelector('.add-product-btn-main');
 
-    const showProductModal = () => {
-        addProductModal.style.display = 'flex';
-        productForm.reset();
-        submitBtn.textContent = 'إرسال';
-        submitBtn.classList.remove('pending');
-        submitBtn.style.display = 'inline-block';
-        editBtn.style.display = 'none';
-        deleteBtn.style.display = 'none';
-    };
+    // --- 3. HELPER FUNCTIONS for data management ---
+    const getUserProducts = () => JSON.parse(localStorage.getItem(userProductsKey)) || [];
+    const saveUserProducts = (products) => localStorage.setItem(userProductsKey, JSON.stringify(products));
+    const openModal = () => addProductModal.style.display = 'flex';
+    const closeModal = () => addProductModal.style.display = 'none';
 
-    const renderUserProducts = (category) => {
+    // Helper to read files for saving in localStorage
+    function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            if (!file) {
+                resolve(null);
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // --- 4. MAIN RENDER FUNCTION (with SEARCH) ---
+    const renderUserProducts = (category = 'all', searchTerm = '') => {
         dashboardProductList.innerHTML = '';
-        const filteredProducts = category === 'all' ? userProducts : userProducts.filter(p => p.category === category);
-        
+        const userProducts = getUserProducts();
+
+        // Step 1: Filter by search term
+        let filteredProducts = userProducts.filter(product => {
+            const query = searchTerm.toLowerCase().trim();
+            if (!query) return true;
+            const searchableText = [
+                product.name, product.description, product.category, product.price.toString()
+            ].join(' ').toLowerCase();
+            return searchableText.includes(query);
+        });
+
+        // Step 2: Filter by category
+        if (category !== 'all') {
+            filteredProducts = filteredProducts.filter(p => p.category === category);
+        }
+
         if (filteredProducts.length === 0) {
-            dashboardProductList.innerHTML = '<p style="text-align: center; color: #888;">لا توجد منتجات في هذا القسم.</p>';
+            dashboardProductList.innerHTML = '<p style="text-align: center; color: #888;">لا توجد منتجات تطابق بحثك في هذا القسم.</p>';
             return;
         }
 
         filteredProducts.forEach(product => {
             const productCard = document.createElement('div');
             productCard.classList.add('product-card');
+            const imageUrl = product.image || `https://via.placeholder.com/300x200/999/FFFFFF?text=Product`;
+            
             productCard.innerHTML = `
-                <img src="https://via.placeholder.com/300x200/999/FFFFFF?text=Product" alt="${product.name}">
+                <img src="${imageUrl}" alt="${product.name}" loading="lazy">
                 <div class="product-info">
                     <h3>${product.name}</h3>
-                    <p>${product.description}</p>
+                    <p>${product.description.substring(0, 80)}...</p>
                     <div class="product-price">${product.price} جنيه</div>
                 </div>
             `;
             productCard.addEventListener('click', () => {
+                // Populate form for editing
                 document.getElementById('product-id').value = product.id;
                 document.getElementById('store-name').value = product.storeName;
                 document.getElementById('product-name').value = product.name;
@@ -60,81 +93,126 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.style.display = 'none';
                 editBtn.style.display = 'inline-block';
                 deleteBtn.style.display = 'inline-block';
-                showProductModal();
+                openModal();
             });
             dashboardProductList.appendChild(productCard);
         });
     };
     
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const category = e.target.dataset.category;
-            renderUserProducts(category);
-            categoryLinks.forEach(item => item.classList.remove('active'));
-            e.target.classList.add('active');
-        });
+    // --- 5. EVENT LISTENERS ---
+
+    // Search input listener
+    dashboardSearchInput.addEventListener('input', () => {
+        const activeCategory = document.querySelector('.category-list a.active')?.dataset.category || 'all';
+        renderUserProducts(activeCategory, dashboardSearchInput.value);
     });
 
-    const addProductBtns = document.querySelectorAll('.add-product-btn');
-    addProductBtns.forEach(btn => {
-        btn.addEventListener('click', showProductModal);
+    // Category links listener
+categoryLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = e.target.dataset.category;
+        
+        // تحديث الكلاس النشط على الروابط
+        categoryLinks.forEach(item => item.classList.remove('active'));
+        e.target.classList.add('active');
+
+        // إعادة عرض المنتجات للقسم المختار
+        renderUserProducts(category, dashboardSearchInput.value);
+
+        // --- الكود النهائي للانتقال ---
+        // ننتظر لحظة قصيرة جدًا للتأكد من أن المتصفح قد رسم المنتجات
+        setTimeout(() => {
+            const productArea = document.querySelector('.product-area');
+            if (productArea) {
+                // الانتقال إلى بداية منطقة عرض المنتجات
+                productArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 50); // تأخير بسيط جدًا لضمان الموثوقية
     });
-
-    closeProductModalBtn.addEventListener('click', () => {
-        addProductModal.style.display = 'none';
-    });
-    
-productForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    // ...الكود الخاص بإنشاء وحفظ المنتج...
-
-    addProduct(newProduct);
-    alert('تمت إضافة المنتج بنجاح وسيتم مراجعته.');
-    productForm.reset(); // لإفراغ النموذج
-
-    // --- أضف هذا السطر لإغلاق النافذة ---
-    document.getElementById('add-product-modal').classList.remove('active');
 });
 
-    editBtn.addEventListener('click', () => {
+    // Open modal for NEW product
+    mainAddProductBtn.addEventListener('click', () => {
+        productForm.reset();
+        document.getElementById('product-id').value = ''; // Ensure ID is empty
+        submitBtn.style.display = 'inline-block';
+        editBtn.style.display = 'none';
+        deleteBtn.style.display = 'none';
+        openModal();
+    });
+
+    closeProductModalBtn.addEventListener('click', closeModal);
+
+    // Form submission (for both new and edited products)
+    productForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
         const productId = document.getElementById('product-id').value;
-        const productIndex = userProducts.findIndex(p => p.id == productId);
-        if (productIndex > -1) {
-            userProducts[productIndex] = {
-                id: productId,
+        const userProducts = getUserProducts();
+        
+        const imageFile = document.getElementById('product-image').files[0];
+        const category = document.querySelector('.category-list a.active')?.dataset.category || 'all';
+
+        if (productId) { // Editing existing product
+            const productIndex = userProducts.findIndex(p => p.id == productId);
+            if (productIndex > -1) {
+                userProducts[productIndex] = {
+                    ...userProducts[productIndex], // Preserve old data like status
+                    storeName: document.getElementById('store-name').value,
+                    name: document.getElementById('product-name').value,
+                    description: document.getElementById('product-description').value,
+                    price: document.getElementById('product-price').value,
+                    shippingCost: document.getElementById('shipping-cost').value,
+                    image: imageFile ? await readFileAsDataURL(imageFile) : userProducts[productIndex].image,
+                    category: category,
+                    status: 'pending' // Always reset to pending on edit
+                };
+                alert('تم تعديل المنتج بنجاح وسيتم مراجعته.');
+            }
+        } else { // Adding new product
+            const newProduct = {
+                id: Date.now(),
+                userEmail: currentUserEmail,
                 storeName: document.getElementById('store-name').value,
                 name: document.getElementById('product-name').value,
                 description: document.getElementById('product-description').value,
                 price: document.getElementById('product-price').value,
                 shippingCost: document.getElementById('shipping-cost').value,
-                category: userProducts[productIndex].category,
-                status: 'pending' // إعادة المنتج إلى حالة قيد القبول بعد التعديل
+                image: await readFileAsDataURL(imageFile),
+                category: category,
+                status: 'pending'
             };
-            localStorage.setItem('userProducts', JSON.stringify(userProducts));
-            alert('تم تعديل المنتج بنجاح!');
-            addProductModal.style.display = 'none';
-            renderUserProducts('all');
+            userProducts.push(newProduct);
+            alert('تمت إضافة المنتج بنجاح وسيتم مراجعته.');
+        }
+
+        saveUserProducts(userProducts);
+        closeModal();
+        renderUserProducts(category, dashboardSearchInput.value);
+    });
+
+    // Delete button listener
+    deleteBtn.addEventListener('click', () => {
+        const productId = document.getElementById('product-id').value;
+        if (confirm('هل أنت متأكد من رغبتك في حذف هذا المنتج؟')) {
+            let userProducts = getUserProducts();
+            userProducts = userProducts.filter(p => p.id != productId);
+            saveUserProducts(userProducts);
+            alert('تم حذف المنتج بنجاح!');
+            closeModal();
+            renderUserProducts('all', dashboardSearchInput.value);
         }
     });
 
-    deleteBtn.addEventListener('click', () => {
-        const productId = document.getElementById('product-id').value;
-        userProducts = userProducts.filter(p => p.id != productId);
-        localStorage.setItem('userProducts', JSON.stringify(userProducts));
-        alert('تم حذف المنتج بنجاح!');
-        addProductModal.style.display = 'none';
-        renderUserProducts('all');
-    });
-
-    // وظيفة تسجيل الخروج
+    // Logout button listener
     logoutBtn.addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('loggedInUserEmail');
         window.location.href = 'index.html';
     });
 
+    // --- 6. INITIAL RENDER ---
     renderUserProducts('all');
 });
-
 
