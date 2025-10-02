@@ -1287,6 +1287,9 @@ header {
     z-index: 1001;      /* A high number to keep it on top */
 }
 
+
+
+
 /* ==================================================================== */
 /* === RESPONSIVE STYLES (CORRECTED ORDER) ============================ */
 /* ==================================================================== */
@@ -1427,4 +1430,58 @@ header {
         /* 4 columns for large screens */
         grid-template-columns: repeat(4, 1fr);
     }
+}
+
+/* ========================================= */
+/* === Product Details Page Styles ========= */
+/* ========================================= */
+
+.details-card {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 25px;
+    border: 1px solid #444;
+}
+.details-card h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 5px;
+    border-bottom: 1px solid #333;
+}
+.detail-item:last-child {
+    border-bottom: none;
+}
+.detail-label {
+    font-weight: bold;
+    color: #aaa;
+}
+.detail-value {
+    color: #fff;
+    font-weight: 500;
+}
+
+/* --- NEW CSS for the Digital Content Notice --- */
+.digital-content-notice {
+    background-color: rgba(23, 162, 184, 0.1); /* Light blue transparent background */
+    border: 1px solid #17a2b8; /* Blue border */
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+}
+.digital-content-notice h4 {
+    margin-top: 0;
+    color: #17a2b8; /* Blue color for the title */
+}
+.digital-content-notice p {
+    margin-bottom: 0;
+    line-height: 1.6;
 }
